@@ -1,0 +1,98 @@
+{
+  "name": "@webship.co/workspace-nextcloud",
+  "version": "1.0.0",
+  "description": "Nextcloud for Webship Workspace: the builder (`cmd-nextcloud-project.sh`, a file and collaboration server from its release tarball, installed with its own installer on the project's database) and the server's command-line tool (occ) in every sites folder, the default accounts, the Nextcloud step pack wired into the testing setup, and its AI items in their folders: two agents, a skill, a command and two prompts.",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/webship/workspace-nextcloud.git"
+  },
+  "files": [
+    "dist/src",
+    "ai",
+    "commands",
+    "features",
+    "scripts",
+    "testing",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "prepare": "npm run build",
+    "test": "npm run build && node --test dist/tests/*.test.js",
+    "lint": "tsc -p tsconfig.json --noEmit"
+  },
+  "workspacePlugin": {
+    "name": "nextcloud",
+    "label": "Nextcloud",
+    "needs": [
+      [
+        "dev",
+        "test",
+        "sandboxes",
+        "demos"
+      ],
+      "ai-agents",
+      "ai-skills",
+      "ai-commands",
+      "ai-prompts"
+    ],
+    "commands": {
+      "types": [
+        "sites"
+      ],
+      "workspaces": [
+        "dev",
+        "test",
+        "sandboxes",
+        "demos"
+      ],
+      "files": [
+        "commands/cmd-nextcloud-project.sh",
+        "commands/cmd-tools-nextcloud-occ.sh"
+      ]
+    },
+    "scripts": {
+      "functions": [
+        "scripts/functions/fun-nextcloud.sh"
+      ],
+      "args": [
+        "scripts/args/arg-nextcloud.sh",
+        "scripts/args/arg-nextcloud-occ.sh"
+      ],
+      "machine": [
+        "scripts/nextcloud-site.sh",
+        "testing/site.feature"
+      ]
+    },
+    "ai": {
+      "agents": [
+        "ai/agents/nextcloud-site-builder.md",
+        "ai/agents/nextcloud-tester.md"
+      ],
+      "skills": [
+        "ai/skills/nextcloud-scenarios"
+      ],
+      "commands": [
+        "ai/commands/nextcloud-test.md"
+      ],
+      "prompts": [
+        "ai/prompts/nextcloud-build-and-test.md",
+        "ai/prompts/nextcloud-scenarios-for-an-area.md"
+      ]
+    },
+    "features": [
+      "features/nextcloud.feature"
+    ]
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@webship.co/workspace-plugin-api": "^1.0.11",
+    "typescript": "^5.9.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
