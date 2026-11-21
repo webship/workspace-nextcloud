@@ -61,7 +61,10 @@ for verb in ${SITE_VERBS:-}; do
       url="https://download.nextcloud.com/server/releases/$file"
       tmp="$(mktemp -d)"
       echo "Fetching $url"
-      if ! curl -fsSL "$url" -o "$tmp/$file" || ! curl -fsSL "$url.sha256" -o "$tmp/$file.sha256"; then
+      # A transfer that stays under 10 KB/s for a minute, or a connection that does not open in 30 seconds, is given
+      # up and tried again (three times): a stalled connection would otherwise keep curl waiting forever.
+      fetch() { curl -fsSL --connect-timeout 30 --speed-limit 10240 --speed-time 60 --retry 3 --retry-delay 5 "$1" -o "$2"; }
+      if ! fetch "$url" "$tmp/$file" || ! fetch "$url.sha256" "$tmp/$file.sha256"; then
         echo "The release $version could not be fetched from $url." >&2
         rm -rf "$tmp"
         exit 1
